@@ -9,7 +9,7 @@
 - Julio César Islas Espino
 - Miroslava Mora Espinosa
 - Jesús Eliuth Martínez Mendoza
-- Leo Tintos
+- Tintos Fabela Leonardo R.
 
 ## Descripción
 
