@@ -29,33 +29,73 @@ mina.
 
 ## Estructura prevista
 
-La estructura final se ajustará a la implementación acordada por el equipo.
-Como punto de partida, organizaremos el código por responsabilidades:
+El código se organiza separando el motor de las capas de interfaz:
 
 ```text
 .
 ├── diagramas/  # Diagrama de clases y otros diagramas del diseño
 ├── reportes/   # Reporte técnico y reporte de uso de modelo de lenguaje
 ├── src/
-│   ├── model/       # Estado del tablero y reglas independientes de la interfaz
-│   ├── view/        # Ventana y componentes gráficos
-│   └── controller/  # Eventos del ratón y comunicación entre modelo y vista
-├── tests/      # Pruebas unitarias del motor y pruebas adicionales
+│   └── buscaminas/
+│       ├── model/       # Estado del tablero y reglas independientes de Tkinter
+│       ├── view/        # Ventana y componentes gráficos
+│       └── controller/  # Eventos y comunicación entre modelo y vista
+├── tests/      # Pruebas unitarias del motor
+├── .gitignore
 ├── Proyecto2_MyP20271.pdf
 └── README.md
 ```
 
+## Tecnologías
+
+- **Python 3:** permite mantener las reglas del motor claras y fáciles de probar.
+- **Tkinter:** biblioteca gráfica estándar de Python para construir la ventana
+  y recibir eventos del ratón, sin agregar dependencias gráficas externas.
+- **pytest:** herramienta de desarrollo para ejecutar las pruebas unitarias.
+
+El modelo no importa Tkinter. La interfaz se comunica con el motor mediante
+acciones y snapshots; el modelo publica cambios a observadores registrados sin
+depender de una ventana concreta.
+
 ## Ejecución
 
-El lenguaje y la biblioteca gráfica todavía están por acordarse. En cuanto
-estén definidos e implementados, aquí se documentarán los requisitos de
-instalación y el comando exacto para iniciar el juego.
+El motor y sus pruebas ya están en desarrollo. El punto de entrada de la
+interfaz gráfica se agregará cuando se integre el trabajo de vista y
+controlador; entonces se documentará aquí el comando para iniciar el juego.
 
 ## Preparación y pruebas
 
-Las instrucciones para instalar dependencias y ejecutar las pruebas unitarias
-se agregarán cuando se elijan el lenguaje, las herramientas y el framework de
-pruebas. Las pruebas cubrirán el motor sin depender de la interfaz gráfica.
+Se necesita Python 3. Para instalar las dependencias de desarrollo:
+
+```bash
+python -m pip install -r requirements-dev.txt
+```
+
+Para ejecutar las pruebas del motor desde la raíz del repositorio:
+
+```bash
+python -m pytest -q
+```
+
+Las pruebas del motor no necesitan abrir la interfaz gráfica.
+
+## Motor del juego
+
+`MinesweeperGame` recibe filas, columnas y posiciones de minas, de modo que
+puede usarse con la estrategia aleatoria de la partida o con posiciones fijas
+en pruebas. Su API principal es:
+
+- `reveal(row, column)`: descubre una casilla, expande los espacios vacíos y
+  actualiza el estado de victoria o derrota.
+- `toggle_flag(row, column)`: coloca o quita una bandera en una casilla cubierta.
+- `snapshot()`: devuelve una vista inmutable del tablero sin revelar la ubicación
+  de minas ocultas.
+- `subscribe(callback)`: registra un observador para recibir snapshots después
+  de cambios; devuelve una función para cancelar la suscripción.
+
+`MoveResult` informa si la acción cambió el tablero, qué casillas se
+descubrieron y si fue la primera jugada. Esto permite que el controlador inicie
+el temporizador al primer descubrimiento y lo detenga al finalizar la partida.
 
 ## Integrantes
 
